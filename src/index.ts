@@ -35,7 +35,7 @@ console.log(read)
 const originalCreatedAt = user.response.user.createdAt;
 const newCreatedAt = read?.user.createdAt;
 
-assert.equal(originalCreatedAt, newCreatedAt, "created at doesn't match")
+assert.equal(originalCreatedAt.getTime(), newCreatedAt?.getTime(), "created at doesn't match")
 
 console.log("[db] Starting database truncate…");
 
