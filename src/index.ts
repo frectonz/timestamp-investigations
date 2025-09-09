@@ -1,8 +1,8 @@
 import { strict as assert } from "assert";
 
-import { db } from "@/db";
 import { auth } from "@/auth";
 import { cookieSetter } from "./cookies";
+import { pool } from "./pool";
 
 const testUser = { name: "test", email: "test@test.com", password: "password" };
 
@@ -31,12 +31,15 @@ process.env.TZ = "America/Los_Angeles";
 const read = await auth.api.getSession({ headers: cookieSetter(user.headers)! });
 console.log(read)
 
-console.log("Created At", read?.user.createdAt.toString())
 
+const originalCreatedAt = user.response.user.createdAt;
+const newCreatedAt = read?.user.createdAt;
+
+assert.equal(originalCreatedAt, newCreatedAt, "created at doesn't match")
 
 console.log("[db] Starting database truncate…");
 
-await db.execute(`
+await pool.query(`
   DO $$ DECLARE
     r RECORD;
   BEGIN
